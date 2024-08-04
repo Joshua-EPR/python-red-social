@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Crear Publicación</title>
+    <link rel="shortcut icon" href="../static/Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    {% extends 'home.html' %}
+    {% block contenido %}
+    <div class="container mx-auto px-4 mt-8 w-[70vw] p-8 m-8">
+        <h1 class="text-2xl font-bold mb-6">Crear Publicación</h1>
+        <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+            {{ form.csrf_token }}
+
+            <div>
+                <label for="content" class="block text-lg font-medium mb-2">Contenido:</label>
+                {{ form.content(class="form-control block w-full p-2 border border-gray-300 rounded-lg") }}
+            </div>
+
+            <div class="flex flex-col gap-4">
+                <label for="photo" class="block text-lg font-medium mb-2">Imagen o Video:</label>
+                <div class="flex">
+                    {{ form.photo(class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-500 file:text-white hover:file:bg-sky-700", id='file-input') }}
+                    <img id="preview" class="hidden h-36 w-36 object-cover transition ease-in-out">
+                </div>
+            </div>
+
+            <div class="flex space-x-4">
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Publicar</button>
+                <a href="{{url_for('feed')}}" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600">Cancelar</a>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById('file-input').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('preview');
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+                preview.classList.add('hidden');
+            }
+        });
+    </script>
+    {% endblock contenido %}
+</body>
+
+</html>

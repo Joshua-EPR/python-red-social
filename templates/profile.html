@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Perfil</title>
+    <link rel="shortcut icon" href="../static/Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+    {% extends 'home.html' %}
+    {% block contenido %}
+    <div class="flex justify-center items-center">
+        <!-- {% if current_user != user %}
+        <h1 class="">Perfil de {{ user.username }}</h1>
+        {% endif %}
+        {% if current_user == user %}
+        
+        {% endif %} -->
+        <div class="max-w-xl">
+            <div class="pt-10 mb-8">
+                <div class="flex items-center justify-center gap-14 p-4">
+                    <img src="{{ url_for('static', filename='profile_pictures/' + user.profile_picture) }}"
+                        class="object-cover h-32 w-32 rounded-full"  alt="Foto de perfil">
+                    <h2 class="text-3xl">{{ user.username }}</h2>
+                    {% if current_user != user %}
+                    {% if current_user.is_following(user) %}
+                    <a class="transition ease-in-out bg-red-500 text-white p-2 rounded-lg border border-red-500 hover:bg-white hover:text-red-500" href="{{ url_for('unfollow', user_id=user.id) }}">Dejar de
+                        Seguir</a>
+                    {% else %}
+                    <a class="transition ease-in-out bg-sky-500 text-white p-2 rounded-lg border border-sky-500 hover:bg-white hover:text-sky-500" href="{{ url_for('follow', user_id=user.id) }}">Seguir</a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex flex-col justify-center m-2 p-4">
+                <h4 class="text-2xl font-semibold m-2 p-1">Publicaciones</h4>
+                {% for post in user.posts %}
+                <div class="w-full flex items-center justify-center flex-col gap-4 p-4" style="min-width: 50vw;">
+                    <div class="border border-sky-500 rounded-lg w-full bg-white max-w-xl">
+                        <div class="p-2">
+                            <p class="p-2 ml-6 text-xl">{{ post.content }}</p>
+                        </div>
+                        <hr>
+                        {% if post.photo %}
+                        <div>
+                            <img src="{{ url_for('static', filename='profile_pictures/' + post.photo) }}" alt="Foto de la publicación" class="w-full h-auto">
+                        </div>
+                        {% endif %}
+                        <div class="p-4">
+                            <div class="flex flex-col gap-4">
+                                <div class="flex gap-8">
+                                    <p>{{ post.likes_count }} Me gusta</p>
+                                    {% if current_user.is_authenticated %}
+                                    {% if post.is_liked_by(current_user) %}
+                                    <form action="{{ url_for('unlike', post_id=post.id) }}" method="post">
+                                        <button type="submit"><i class="fa-solid fa-heart"></i></button>
+                                    </form>
+                                    {% else %}
+                                    <form action="{{ url_for('like', post_id=post.id) }}" method="post">
+                                        <button type="submit"><i class="fa-regular fa-heart"></i></button>
+                                    </form>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                                <div class="flex flex-col border p-2 w-full">
+                                    <h2 class="text-xl">Comentarios</h2>
+                                    {% for comment in post.comments %}
+                                    <div class="flex gap-4 w-full m-1">
+                                        <p class="text-xl">{{ comment.user.username }}</p>
+                                        <form action="{{ url_for('eliminar_comentario', post_id=post.id, comment_id=comment.id) }}" method="POST">
+                                            <button type="submit" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash-can"></i></button>
+                                        </form>
+                                    </div>
+                                    <p class="ml-6">{{ comment.text }}</p>
+                                    {% if current_user == comment.user %}
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <h2>Agregar comentario</h2>
+                            <form action="{{ url_for('agregar_comentario', post_id=post.id) }}" method="POST">
+                                <input type="text" class="transition outline-0 ease-in-out p-1 text-black border border-sky-500 rounded-l-lg" name="comment_text" placeholder="Comentario" required>
+                                <button type="submit" class="transition ease-in-out bg-sky-500 p-1 text-white border border-sky-500 hover:bg-white hover:text-sky-500 rounded-r-lg">Comentar
+                                    <i class="fa-solid fa-comment"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endblock contenido %}
+</body>
+
+</html>

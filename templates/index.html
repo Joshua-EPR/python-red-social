@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="../static/Logo.png" type="image/x-icon">
+  <title>FriendLink</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <nav class="bg-gray-900 p-4">
+    <div class="container mx-auto flex items-center justify-between">
+      <a href="#" class="flex items-center">
+        <img src="../static/Logo.png" class="h-12" alt="Logo">
+      </a>
+      <div class="flex space-x-4">
+        <a href="{{ url_for('login') }}" class="btn btn-secondary text-white bg-gray-700 py-2 px-4 rounded">Iniciar sesión</a>
+        <a href="{{ url_for('register') }}" class="btn btn-primary text-white bg-blue-500 py-2 px-4 rounded">Regístrate</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="h-screen bg-fixed bg-no-repeat bg-center" style="background-image: url(https://i.postimg.cc/CL63zX1v/pexels-jakub-novacek-924824.jpg); background-size: cover;">
+    <div class="container mx-auto flex flex-col items-center justify-center h-full bg-gray-800 bg-opacity-75">
+      <div class="flex justify-center items-center flex-col text-center text-white">
+        <img src="../static/img-index/FriendLink.gif" alt="Logo" class="w-48 rounded-full mb-4">
+        <h1 class="text-4xl font-bold">¡Bienvenid@s a FriendLink!</h1>
+      </div>
+      <div class="mt-8">
+        <a href="/register" class="btn btn-primary text-white bg-blue-500 py-3 px-6 rounded-lg">Regístrate</a>
+      </div>
+    </div>
+  </header>
+  <footer class="relative bottom-0 flex justify-center items-center flex-col bg-slate-200 w-full p-4">
+    <div style="font-size: 20px; line-height: 1.7;">
+        <p>Created by Joshua Emil Peña Rosario 😎.</p>
+    </div>
+    <div class="flex gap-[1em]" style="padding: 2em 1em 6em;">
+        <a class="text-3xl transition ease-in-out hover:scale-125 hover:text-sky-500" href="https://www.instagram.com/joshua.epr/"><i class="fa-brands fa-instagram"></i></a>
+        <a class="text-3xl transition ease-in-out hover:scale-125 hover:text-sky-500" href="https://github.com/Joshua-EPR"><i class="fa-brands fa-github"></i></a>
+    </div>
+</footer>
+</body>
+
+</html>

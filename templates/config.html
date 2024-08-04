@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Configuración</title>
+    <link rel="shortcut icon" href="../static/Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    {% extends 'home.html' %}
+    {% block contenido %}
+
+    
+    <div class="container mx-auto w-[70vw] px-4 mt-8 mb-8 space-y-8">
+        <!-- <form id="theme-form" action="{{ url_for('change_theme') }}" method="POST" class="space-y-4">
+            <label for="theme" class="block text-lg font-medium">Cambiar tema:</label>
+            <select id="theme" class="form-select block w-full p-2 border border-gray-300 rounded-lg" name="theme">
+                <option value="light-mode">Claro</option>
+                <option value="dark-mode">Oscuro</option>
+            </select>
+            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Aplicar</button>
+        </form> -->
+
+        <div>
+            <h1 class="text-2xl font-bold">Cambiar nombre de usuario</h1>
+            <form action="{{ url_for('config') }}" method="post" class="space-y-4 mt-4">
+                {{ formu.hidden_tag() }}
+                <div>
+                    {{ formu.username.label(class='block text-lg font-medium mb-2') }}
+                    {{ formu.username(class='form-control block w-full p-2 border border-gray-300 rounded-lg') }}
+                </div>
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Guardar</button>
+            </form>
+        </div>
+
+        <div>
+            <h1 class="text-2xl font-bold">Cambiar contraseña</h1>
+            <form method="POST" action="{{url_for('config')}}" class="space-y-4 mt-4">
+                {{ formula.hidden_tag() }}
+                <div>
+                    <label for="current_password" class="block text-lg font-medium mb-2">{{ formula.current_password.label }}</label>
+                    {{ formula.current_password(class="form-control block w-full p-2 border border-gray-300 rounded-lg") }}
+                </div>
+                <div>
+                    <label for="new_password" class="block text-lg font-medium mb-2">{{ formula.new_password.label }}</label>
+                    {{ formula.new_password(class="form-control block w-full p-2 border border-gray-300 rounded-lg") }}
+                </div>
+                <div>
+                    <label for="confirm_password" class="block text-lg font-medium mb-2">{{ formula.confirm_password.label }}</label>
+                    {{ formula.confirm_password(class="form-control block w-full p-2 border border-gray-300 rounded-lg") }}
+                </div>
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Cambiar contraseña</button>
+            </form>
+        </div>
+
+        <div>
+            <h1 class="text-2xl font-bold">Cargar foto de perfil</h1>
+            <form action="{{ url_for('config') }}" method="post" enctype="multipart/form-data" class="mt-4">
+                {{ form.hidden_tag() }}
+                <div class="flex items-center space-x-6">
+                    <!-- {{ form.picture.label(class='block text-lg font-medium mb-2') }} -->
+                    <div class="shrink-0">
+                        <img id="preview" class="hidden h-16 w-16 object-cover rounded-full">
+                    </div>
+                    <label class="block m-2">
+                        {{ form.picture(class='block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sky-500 file:text-white hover:file:bg-sky-700', id='file-input') }}
+                    </label>
+                </div>
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600">Cargar</button>
+            </form>
+        </div>
+
+        <div class="space-y-4 mb-2">
+            <a href="/logout" class="block bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 text-center">Cerrar sesión</a>
+            <form action="/delete_profile" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu perfil?');">
+                <button type="submit" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 w-full">Eliminar perfil</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('file-input').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('preview');
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                }
+
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = '';
+                preview.classList.add('hidden');
+            }
+        });
+    </script>
+
+    {% endblock contenido %}
+</body>
+
+</html>

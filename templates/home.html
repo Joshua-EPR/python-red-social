@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Home</title>
+
+    <link rel="shortcut icon" href="../static/Logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Estilos para el modo claro */
+        body.light-mode {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        /* Estilos para el modo oscuro */
+        body.dark-mode {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* Estilos específicos para el template home.html en el modo claro */
+        body.light-mode .home-content {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        body.dark-mode .clase {
+            background-color: #0e0e0e;
+        }
+
+        /* Estilos específicos para el template home.html en el modo oscuro */
+        body.dark-mode .home-content {
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        body.dark-mode input {
+            background-color: transparent;
+            color: #ffffff;
+        }
+
+        body.dark-mode .card {
+            background-color: #000;
+            color: #ffffff;
+            border: solid 1px #333;
+        }
+
+        body.dark-mode .d-flex {
+            background-color: #000;
+            color: #ffffff;
+            border: solid 1px #333;
+        }
+    </style>
+    <script>
+        function toggleMode() {
+            var body = document.getElementsByTagName("body")[0];
+
+            if (body.classList.contains("light-mode")) {
+                body.classList.remove("light-mode");
+                body.classList.add("dark-mode");
+            } else {
+                body.classList.remove("dark-mode");
+                body.classList.add("light-mode");
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="{{ theme }} font-mono">
+        <nav class="flex justify-between items-center p-4 bg-[#f5f6f9] shadow relative top-0 w-full">
+            <a href="{{ url_for('feed') }}" class="font-extrabold font-mono"><span
+                    class="text-sky-500">Friend</span>Link</a>
+            <ul class="flex justify-center gap-8 text-xl">
+                <li class="transition ease-in-out hover:scale-125 hover:text-sky-500">
+                    <a href="{{ url_for('feed') }}"><i class="fa-solid fa-house"></i></a>
+                </li>
+                <li class="transition ease-in-out hover:scale-125 hover:text-sky-500">
+                    <a href="{{ url_for('profile', username=current_user.username) }}"><i class="fa-solid fa-user"></i></a>
+                </li>
+                <li class="transition ease-in-out hover:scale-125 hover:text-sky-500">
+                    <a href="{{ url_for('config') }}"><i class="fa-solid fa-gear"></i></a>
+                </li>
+                <li class="transition ease-in-out hover:scale-125 hover:text-sky-500">
+                    <a href="{{ url_for('create_post') }}"><i class="fa-solid fa-circle-plus"></i></a>
+                </li>
+            </ul>
+            <form role="search" method="POST" action="{{ url_for('search') }}">
+                <input class="outline-0 p-2 rounded-l-lg m-0 border border-sky-500" type="search" name="search_query"
+                    placeholder="Buscar usuario" required>
+                <button type="submit"
+                    class="transition ease-in-out hover:text-sky-500 hover:bg-[#f5f6f9] border hover:border-sky-500 rounded-r-lg bg-sky-500 m-0 p-2 text-white"><i
+                        class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </nav>
+        <div>
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="w-full p-1 flex justify-center items-center text-white bg-sky-500 transition ease-in-out">
+                <ul>
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% endwith %}
+
+            {% block contenido %}
+            <div class="flex justify-center items-center flex-col gap-4">
+                {% for post in posts %}
+                <div class="w-full flex items-center flex-col gap-4 p-4" style="min-width: 70vw;">
+                    <div class="border border-sky-500 rounded-lg w-full bg-white max-w-xl">
+                        <div class="flex items-center p-4">
+                            <a href="{{ url_for('profile', username=post.user.username) }}" class="flex items-center">
+                                <img class="m-2 w-16 h-16 object-cover rounded-full"
+                                    src="{{ url_for('static', filename='profile_pictures/' + (post.user.profile_picture or '')) }}"
+                                    alt="Foto de perfil">
+                            <h5 class="text-xl">{{ post.user.username }}</h5>
+                            </a>
+                            <div class="flex m-3">
+                                {% if current_user != post.user %}
+                                {% if current_user.is_following(post.user) %}
+                                <a class="transition ease-in-out bg-red-500 text-white p-1 rounded-lg border border-red-500 hover:bg-white hover:text-red-500" href="{{ url_for('unfollow', user_id=post.user.id) }}">Dejar de
+                                    Seguir</a>
+                                {% else %}
+                                <a class="transition ease-in-out bg-sky-500 text-white p-1 rounded-lg border border-sky-500 hover:bg-white hover:text-sky-500" href="{{ url_for('follow', user_id=post.user.id) }}">Seguir</a>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                        </div> 
+                        <div class="p-2">
+                            <p class="p-2 ml-6 text-xl">{{ post.content }}</p>
+                        </div>
+                        <hr>
+                        {% if post.photo %}
+                        <div>
+                            <img src="{{ url_for('static', filename='profile_pictures/' + post.photo) }}" alt="Foto de la publicación" class="w-full h-auto">
+                        </div>
+                        {% endif %}
+                        <div class="p-4">
+                            <div class="flex flex-col gap-4">
+                                <div class="flex gap-8">
+                                    <p>{{ post.likes_count }} Me gusta</p>
+                                    {% if current_user.is_authenticated %}
+                                    {% if post.is_liked_by(current_user) %}
+                                    <form action="{{ url_for('unlike', post_id=post.id) }}" method="post">
+                                        <button type="submit"><i class="fa-solid fa-heart"></i></button>
+                                    </form>
+                                    {% else %}
+                                    <form action="{{ url_for('like', post_id=post.id) }}" method="post">
+                                        <button type="submit"><i class="fa-regular fa-heart"></i></button>
+                                    </form>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                                <div class="flex flex-col border p-2 w-full">
+                                    <h2 class="text-xl">Comentarios</h2>
+                                    {% for comment in post.comments %}
+                                    <div class="flex gap-4 w-full m-1">
+                                        <p class="text-xl">{{ comment.user.username }}</p>
+                                        <form action="{{ url_for('eliminar_comentario', post_id=post.id, comment_id=comment.id) }}" method="POST">
+                                            <button type="submit" class="text-red-500 hover:text-red-700"><i class="fa-solid fa-trash-can"></i></button>
+                                        </form>
+                                    </div>
+                                    <p class="ml-6">{{ comment.text }}</p>
+                                    {% if current_user == comment.user %}
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <h2>Agregar comentario</h2>
+                            <form action="{{ url_for('agregar_comentario', post_id=post.id) }}" method="POST">
+                                <input type="text" class="transition outline-0 ease-in-out p-1 text-black border border-sky-500 rounded-l-lg" name="comment_text" placeholder="Comentario" required>
+                                <button type="submit" class="transition ease-in-out bg-sky-500 p-1 text-white border border-sky-500 hover:bg-white hover:text-sky-500 rounded-r-lg">Comentar
+                                    <i class="fa-solid fa-comment"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endblock contenido %}
+        </div>
+    </div>
+
+    <footer class="relative bottom-0 flex justify-center items-center flex-col bg-slate-200 w-full p-4">
+        <div style="font-size: 20px; line-height: 1.7;">
+            <p>Created by Joshua Emil Peña Rosario 😎.</p>
+        </div>
+        <div class="flex gap-[1em]" style="padding: 2em 1em 6em;">
+            <a class="text-3xl transition ease-in-out hover:scale-125 hover:text-sky-500" href="https://www.instagram.com/joshua.epr/"><i class="fa-brands fa-instagram"></i></a>
+            <a class="text-3xl transition ease-in-out hover:scale-125 hover:text-sky-500" href="https://github.com/Joshua-EPR"><i class="fa-brands fa-github"></i></a>
+        </div>
+    </footer>
+</body>
+
+</html>
