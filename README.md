@@ -52,10 +52,6 @@
 
 The objective of "Social Network With Flask" is to demonstrate skills in the development of complete web applications using Flask, providing a robust and scalable solution for the creation of a social network. This project highlights the ability to manage user authentication, data manipulation and development of a consistent and engaging user experience.
 
-<center>
 
 Link to the Project:<br>
 [Live](https://joshuaemil.pythonanywhere.com/) <br>
-Link to Github repo:<br>
-[Github](https://github.com/Joshua-EPR)
-</center>
